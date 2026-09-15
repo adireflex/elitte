@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+<meta name="theme-color" content="#eee9df" />
+<title>Kumiki — Three.js Prototype</title>
+<style>
+:root{--bg:#eee9df;--ink:#26211c;--muted:#817a71;--glass:rgba(255,255,255,.42)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,Arial,sans-serif;color:var(--ink);touch-action:none}#stage{position:fixed;inset:0}canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-events:none;padding:max(18px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom))}.top{display:grid;grid-template-columns:48px 1fr 48px;align-items:start}.circle{pointer-events:auto;width:46px;height:46px;border-radius:50%;border:1px solid rgba(36,31,26,.05);background:var(--glass);font-size:24px;color:var(--ink);display:grid;place-items:center}.title{text-align:center;padding-top:3px}.eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}.name{font-size:17px;margin-top:7px;font-weight:500}.progress{font-size:12px;margin-top:8px;color:var(--muted);letter-spacing:.12em}.message{position:absolute;left:50%;bottom:112px;transform:translateX(-50%);width:min(82vw,420px);text-align:center;color:#565048;font-size:14px;line-height:1.5}.bottom{position:absolute;left:50%;bottom:max(22px,env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;gap:34px}.action{pointer-events:auto;border:0;background:none;color:#49433c;font:inherit;font-size:11px;display:grid;justify-items:center;gap:7px}.action span:first-child{width:45px;height:45px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.32);border:1px solid rgba(36,31,26,.04);font-size:20px}.toast{position:absolute;left:50%;top:118px;transform:translate(-50%,-8px);background:rgba(41,37,32,.84);color:#fff;padding:10px 15px;border-radius:999px;font-size:12px;opacity:0;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}.loader{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:13px;letter-spacing:.04em}.solved{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 24px max(58px,calc(env(safe-area-inset-bottom) + 30px));background:linear-gradient(to bottom,rgba(238,233,223,0) 46%,rgba(238,233,223,.96) 73%,#eee9df 100%);opacity:0;visibility:hidden;transition:.35s;pointer-events:none}.solved.show{opacity:1;visibility:visible;pointer-events:auto}.solved h1{font-size:27px;font-weight:400;letter-spacing:.28em;text-indent:.28em;text-transform:uppercase;margin:0}.solved p{font-size:14px;color:var(--muted);margin:10px 0 24px}.primary{pointer-events:auto;border:0;border-radius:999px;background:#2e2b27;color:white;padding:15px 28px;font:inherit;min-width:150px}.hintArrow{position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.62);font-size:12px;color:#5a534b;opacity:0;transition:.2s}.hintArrow.show{opacity:1}
+</style>
+</head>
+<body>
+<div id="stage"><div class="loader" id="loader">Loading Three.js…</div></div>
+<div class="hud">
+  <div class="top">
+    <button class="circle" id="back">‹</button>
+    <div class="title"><div class="eyebrow">Japanese joinery</div><div class="name">Kumiki · Six Piece Lock</div><div class="progress" id="progress">0 / 6</div></div>
+    <button class="circle" id="more">···</button>
+  </div>
+  <div class="toast" id="toast">Locked — another piece moves first.</div>
+  <div class="hintArrow" id="hintArrow">Drag the glowing piece outward</div>
+  <div class="message" id="message">Find the hidden sequence and take the puzzle apart.</div>
+  <div class="bottom" id="bottom">
+    <button class="action" id="reset"><span>↶</span><span>Reset</span></button>
+    <button class="action" id="hint"><span>◇</span><span>Hint</span></button>
+    <button class="action" id="view"><span>◉</span><span>View</span></button>
+  </div>
+  <div class="solved" id="solved"><h1>Solved</h1><p>You found the hidden sequence.</p><button class="primary" id="replay">Replay</button></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+const loader=document.getElementById('loader');
+if(!window.THREE){loader.innerHTML='Three.js failed to load.<br><small>Reload this page in Safari.</small>';return;}
+loader.remove();
+const stage=document.getElementById('stage'), progress=document.getElementById('progress'), msg=document.getElementById('message'), toast=document.getElementById('toast'), solved=document.getElementById('solved'), hintArrow=document.getElementById('hintArrow');
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0xeee9df);
+const camera=new THREE.PerspectiveCamera(34,innerWidth/innerHeight,.1,100); camera.position.set(7,5.4,8.5); camera.lookAt(0,0,0);
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'}); renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(innerWidth,innerHeight); renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap; renderer.outputEncoding=THREE.sRGBEncoding; renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.05; stage.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xfff8ed,0x8c7a68,2.0));
+const key=new THREE.DirectionalLight(0xffefd5,3.8); key.position.set(-5,8,6); key.castShadow=true; key.shadow.mapSize.set(1024,1024); key.shadow.camera.left=-7;key.shadow.camera.right=7;key.shadow.camera.top=7;key.shadow.camera.bottom=-7;scene.add(key);
+const rim=new THREE.DirectionalLight(0xdde7f2,1.0);rim.position.set(5,2,-5);scene.add(rim);
+function wood(seed,dark){const c=document.createElement('canvas');c.width=256;c.height=128;const x=c.getContext('2d');const b=dark?[105,69,46]:[198,153,107];x.fillStyle=`rgb(${b[0]},${b[1]},${b[2]})`;x.fillRect(0,0,256,128);let r=seed*92821+17;const rnd=()=>((r=(r*1664525+1013904223)>>>0)/4294967296);for(let i=0;i<70;i++){const yy=rnd()*128;x.strokeStyle=`rgba(${dark?220:95},${dark?175:72},${dark?120:45},${.025+rnd()*.05})`;x.lineWidth=.5+rnd()*1.3;x.beginPath();x.moveTo(0,yy);for(let xx=0;xx<=256;xx+=18)x.lineTo(xx,yy+Math.sin(xx*.04+rnd()*5)*(1+rnd()*3));x.stroke()}const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(2.2,1);t.encoding=THREE.sRGBEncoding;return t}
+const lightTex=wood(3,false), darkTex=wood(7,true);
+function mat(dark){return new THREE.MeshStandardMaterial({map:dark?darkTex:lightTex,color:dark?0x9a6747:0xd6aa79,roughness:.66,metalness:0,emissive:0x5b351f,emissiveIntensity:0})}
+const root=new THREE.Group();scene.add(root);const ray=new THREE.Raycaster(),pointer=new THREE.Vector2(),pieces=[];
+function box(group,w,h,d,x,y,z,m){const g=new THREE.BoxGeometry(w,h,d,2,2,2);const mesh=new THREE.Mesh(g,m);mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;mesh.userData.piece=group;group.add(mesh)}
+function beam(id,axis,offset,dark,sign){const group=new THREE.Group();group.name=id;const m=mat(dark);group.userData={id,axis:new THREE.Vector3(...axis).normalize(),sign,start:new THREE.Vector3(...offset),travel:0,removed:false,mat:m};group.position.copy(group.userData.start);const L=4.8,T=1.02,gap=1.12,end=(L-gap)/2; if(axis[0]){box(group,end,T,T,-(gap+end)/2,0,0,m);box(group,end,T,T,(gap+end)/2,0,0,m);box(group,gap,.38,T,0,.32,0,m)}else if(axis[1]){box(group,T,end,T,0,-(gap+end)/2,0,m);box(group,T,end,T,0,(gap+end)/2,0,m);box(group,T,gap,.38,0,0,.32,m)}else{box(group,T,T,end,0,0,-(gap+end)/2,m);box(group,T,T,end,0,0,(gap+end)/2,m);box(group,.38,T,gap,.32,0,0,m)}root.add(group);pieces.push(group);return group}
+beam('A',[1,0,0],[0,.22,.18],false,1);beam('B',[1,0,0],[0,-.22,-.18],true,-1);beam('C',[0,1,0],[.20,0,-.20],true,1);beam('D',[0,1,0],[-.20,0,.20],false,-1);beam('E',[0,0,1],[-.18,.18,0],false,1);beam('F',[0,0,1],[.18,-.18,0],true,-1);
+const ORDER=['A','C','E','B','D','F'];let step=0,active=null,pid=null,startX=0,startY=0,startTravel=0,axisScreen=new THREE.Vector2();let orbiting=false,ox=0,oy=0,theta=.68,phi=1.05,radius=12.2,autoRotate=false;
+function current(){return ORDER[step]}
+function showToast(t){toast.textContent=t;toast.classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.classList.remove('show'),1150)}
+function haptic(ms=8){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}}
+function screenAxis(piece){const a=piece.userData.axis.clone().multiplyScalar(piece.userData.sign);const p0=piece.position.clone(),p1=p0.clone().add(a);p0.project(camera);p1.project(camera);axisScreen.set(p1.x-p0.x,-(p1.y-p0.y)).normalize()}
+function pick(e){const rect=renderer.domElement.getBoundingClientRect();pointer.x=((e.clientX-rect.left)/rect.width)*2-1;pointer.y=-((e.clientY-rect.top)/rect.height)*2+1;ray.setFromCamera(pointer,camera);const hits=ray.intersectObjects(root.children,true);return hits[0]?.object?.userData?.piece||null}
+function down(e){const p=pick(e);if(p&&!p.userData.removed){if(p.name!==current()){showToast('Locked — another piece moves first.');haptic(5);return}active=p;pid=e.pointerId;startX=e.clientX;startY=e.clientY;startTravel=p.userData.travel;screenAxis(p);p.userData.mat.emissiveIntensity=.12;renderer.domElement.setPointerCapture?.(e.pointerId)}else{orbiting=true;pid=e.pointerId;ox=e.clientX;oy=e.clientY}}
+function move(e){if(e.pointerId!==pid)return;if(active){const dx=e.clientX-startX,dy=e.clientY-startY;const d=dx*axisScreen.x+dy*axisScreen.y;const tr=THREE.MathUtils.clamp(startTravel+d*.018,0,4.1);active.userData.travel=tr;active.position.copy(active.userData.start).addScaledVector(active.userData.axis,active.userData.sign*tr)}else if(orbiting){const dx=e.clientX-ox,dy=e.clientY-oy;ox=e.clientX;oy=e.clientY;theta-=dx*.007;phi=THREE.MathUtils.clamp(phi+dy*.006,.45,2.15)}}
+function up(e){if(e.pointerId!==pid)return;if(active){active.userData.mat.emissiveIntensity=0;if(active.userData.travel>1.85){active.userData.removed=true;active.userData.travel=4.1;active.position.copy(active.userData.start).addScaledVector(active.userData.axis,active.userData.sign*4.1);step++;progress.textContent=`${step} / 6`;haptic(18);if(step===6){msg.textContent='';setTimeout(()=>solved.classList.add('show'),250)}else{msg.textContent='Piece released. Find what moves next.';showToast('Piece released')}}else{active.userData.travel=0;active.position.copy(active.userData.start)}active=null}orbiting=false;pid=null}
+renderer.domElement.addEventListener('pointerdown',down);renderer.domElement.addEventListener('pointermove',move);renderer.domElement.addEventListener('pointerup',up);renderer.domElement.addEventListener('pointercancel',up);
+function reset(){step=0;progress.textContent='0 / 6';msg.textContent='Find the hidden sequence and take the puzzle apart.';solved.classList.remove('show');pieces.forEach(p=>{p.userData.removed=false;p.userData.travel=0;p.position.copy(p.userData.start);p.userData.mat.emissiveIntensity=0});autoRotate=false}
+function hint(){if(step>=6)return;const p=pieces.find(q=>q.name===current());p.userData.mat.emissiveIntensity=.2;hintArrow.classList.add('show');showToast('This piece can move.');setTimeout(()=>{if(p!==active)p.userData.mat.emissiveIntensity=0;hintArrow.classList.remove('show')},1600)}
+document.getElementById('reset').onclick=reset;document.getElementById('replay').onclick=reset;document.getElementById('hint').onclick=hint;document.getElementById('view').onclick=()=>{autoRotate=!autoRotate;showToast(autoRotate?'Auto rotate on':'Auto rotate off')};document.getElementById('back').onclick=()=>showToast('Prototype · no level select yet');document.getElementById('more').onclick=()=>showToast('Reset · Hint · View');
+function resize(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,2))}addEventListener('resize',resize);
+function animate(){requestAnimationFrame(animate);if(autoRotate&&!active&&!orbiting)theta+=.003;const sp=Math.sin(phi);camera.position.set(radius*sp*Math.sin(theta),radius*Math.cos(phi),radius*sp*Math.cos(theta));camera.lookAt(0,0,0);root.rotation.y+=0;renderer.render(scene,camera)}animate();
+setTimeout(()=>hintArrow.classList.add('show'),850);setTimeout(()=>hintArrow.classList.remove('show'),2600);
+})();
+</script>
+</body>
+</html>
