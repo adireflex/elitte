@@ -4,10 +4,24 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
 <meta name="theme-color" content="#eee9df" />
-<title>Kumiki — Three.js Prototype</title>
+<title>Six-Piece Lock — Three.js Prototype</title>
 <style>
-:root{--bg:#eee9df;--ink:#26211c;--muted:#817a71;--glass:rgba(255,255,255,.42)}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,Arial,sans-serif;color:var(--ink);touch-action:none}#stage{position:fixed;inset:0}canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-events:none;padding:max(18px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom))}.top{display:grid;grid-template-columns:48px 1fr 48px;align-items:start}.circle{pointer-events:auto;width:46px;height:46px;border-radius:50%;border:1px solid rgba(36,31,26,.05);background:var(--glass);font-size:24px;color:var(--ink);display:grid;place-items:center}.title{text-align:center;padding-top:3px}.eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}.name{font-size:17px;margin-top:7px;font-weight:500}.progress{font-size:12px;margin-top:8px;color:var(--muted);letter-spacing:.12em}.message{position:absolute;left:50%;bottom:112px;transform:translateX(-50%);width:min(82vw,420px);text-align:center;color:#565048;font-size:14px;line-height:1.5}.bottom{position:absolute;left:50%;bottom:max(22px,env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;gap:34px}.action{pointer-events:auto;border:0;background:none;color:#49433c;font:inherit;font-size:11px;display:grid;justify-items:center;gap:7px}.action span:first-child{width:45px;height:45px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.32);border:1px solid rgba(36,31,26,.04);font-size:20px}.toast{position:absolute;left:50%;top:118px;transform:translate(-50%,-8px);background:rgba(41,37,32,.84);color:#fff;padding:10px 15px;border-radius:999px;font-size:12px;opacity:0;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}.loader{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:13px;letter-spacing:.04em}.solved{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 24px max(58px,calc(env(safe-area-inset-bottom) + 30px));background:linear-gradient(to bottom,rgba(238,233,223,0) 46%,rgba(238,233,223,.96) 73%,#eee9df 100%);opacity:0;visibility:hidden;transition:.35s;pointer-events:none}.solved.show{opacity:1;visibility:visible;pointer-events:auto}.solved h1{font-size:27px;font-weight:400;letter-spacing:.28em;text-indent:.28em;text-transform:uppercase;margin:0}.solved p{font-size:14px;color:var(--muted);margin:10px 0 24px}.primary{pointer-events:auto;border:0;border-radius:999px;background:#2e2b27;color:white;padding:15px 28px;font:inherit;min-width:150px}.hintArrow{position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.62);font-size:12px;color:#5a534b;opacity:0;transition:.2s}.hintArrow.show{opacity:1}
+:root{--bg:#eee9df;--ink:#27231f;--muted:#81796f;--glass:rgba(255,255,255,.46)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,Arial,sans-serif;color:var(--ink);touch-action:none}
+#stage{position:fixed;inset:0}canvas{display:block;width:100%;height:100%}
+.hud{position:fixed;inset:0;pointer-events:none;padding:max(18px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom))}
+.top{display:grid;grid-template-columns:48px 1fr 48px;align-items:start}
+.circle{pointer-events:auto;width:46px;height:46px;border-radius:50%;border:1px solid rgba(36,31,26,.055);background:var(--glass);font-size:24px;color:var(--ink);display:grid;place-items:center;backdrop-filter:blur(12px)}
+.title{text-align:center;padding-top:3px}.eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}.name{font-size:17px;margin-top:7px;font-weight:520}.progress{font-size:12px;margin-top:8px;color:var(--muted);letter-spacing:.12em}
+.message{position:absolute;left:50%;bottom:112px;transform:translateX(-50%);width:min(86vw,440px);text-align:center;color:#5c554d;font-size:13px;line-height:1.5;transition:.2s}
+.bottom{position:absolute;left:50%;bottom:max(22px,env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;gap:34px}
+.action{pointer-events:auto;border:0;background:none;color:#49433c;font:inherit;font-size:11px;display:grid;justify-items:center;gap:7px}
+.action span:first-child{width:45px;height:45px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.34);border:1px solid rgba(36,31,26,.04);font-size:20px;backdrop-filter:blur(10px)}
+.toast{position:absolute;left:50%;top:118px;transform:translate(-50%,-8px);background:rgba(41,37,32,.84);color:#fff;padding:10px 15px;border-radius:999px;font-size:12px;opacity:0;transition:.2s;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}
+.loader{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:13px;letter-spacing:.04em}
+.guide{position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.62);font-size:12px;color:#5a534b;opacity:0;transition:.2s;white-space:nowrap}.guide.show{opacity:1}
+.solved{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 24px max(58px,calc(env(safe-area-inset-bottom) + 30px));background:linear-gradient(to bottom,rgba(238,233,223,0) 43%,rgba(238,233,223,.97) 75%,#eee9df 100%);opacity:0;visibility:hidden;transition:.35s;pointer-events:none}.solved.show{opacity:1;visibility:visible;pointer-events:auto}.solved h1{font-size:27px;font-weight:400;letter-spacing:.28em;text-indent:.28em;text-transform:uppercase;margin:0}.solved p{font-size:14px;color:var(--muted);margin:10px 0 24px}.primary{pointer-events:auto;border:0;border-radius:999px;background:#2e2b27;color:white;padding:15px 28px;font:inherit;min-width:150px}
 </style>
 </head>
 <body>
@@ -15,55 +29,93 @@
 <div class="hud">
   <div class="top">
     <button class="circle" id="back">‹</button>
-    <div class="title"><div class="eyebrow">Japanese joinery</div><div class="name">Kumiki · Six Piece Lock</div><div class="progress" id="progress">0 / 6</div></div>
+    <div class="title"><div class="eyebrow">Wooden interlock</div><div class="name">Six-Piece Lock</div><div class="progress" id="progress">0 / 6</div></div>
     <button class="circle" id="more">···</button>
   </div>
-  <div class="toast" id="toast">Locked — another piece moves first.</div>
-  <div class="hintArrow" id="hintArrow">Drag the glowing piece outward</div>
-  <div class="message" id="message">Find the hidden sequence and take the puzzle apart.</div>
-  <div class="bottom" id="bottom">
+  <div class="toast" id="toast">Blocked by another piece.</div>
+  <div class="guide" id="guide">Drag wood · background to orbit · pinch to zoom</div>
+  <div class="message" id="message">Take it apart. The wood itself decides what can move.</div>
+  <div class="bottom">
     <button class="action" id="reset"><span>↶</span><span>Reset</span></button>
     <button class="action" id="hint"><span>◇</span><span>Hint</span></button>
     <button class="action" id="view"><span>◉</span><span>View</span></button>
   </div>
-  <div class="solved" id="solved"><h1>Solved</h1><p>You found the hidden sequence.</p><button class="primary" id="replay">Replay</button></div>
+  <div class="solved" id="solved"><h1>Solved</h1><p>You found a path through the lock.</p><button class="primary" id="replay">Replay</button></div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-(function(){
+(()=>{
 const loader=document.getElementById('loader');
-if(!window.THREE){loader.innerHTML='Three.js failed to load.<br><small>Reload this page in Safari.</small>';return;}
+if(!window.THREE){loader.innerHTML='Three.js failed to load.<br><small>Reload this page in Safari.</small>';return}
 loader.remove();
-const stage=document.getElementById('stage'), progress=document.getElementById('progress'), msg=document.getElementById('message'), toast=document.getElementById('toast'), solved=document.getElementById('solved'), hintArrow=document.getElementById('hintArrow');
-const scene=new THREE.Scene(); scene.background=new THREE.Color(0xeee9df);
-const camera=new THREE.PerspectiveCamera(34,innerWidth/innerHeight,.1,100); camera.position.set(7,5.4,8.5); camera.lookAt(0,0,0);
-const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'}); renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(innerWidth,innerHeight); renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap; renderer.outputEncoding=THREE.sRGBEncoding; renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.05; stage.appendChild(renderer.domElement);
-scene.add(new THREE.HemisphereLight(0xfff8ed,0x8c7a68,2.0));
-const key=new THREE.DirectionalLight(0xffefd5,3.8); key.position.set(-5,8,6); key.castShadow=true; key.shadow.mapSize.set(1024,1024); key.shadow.camera.left=-7;key.shadow.camera.right=7;key.shadow.camera.top=7;key.shadow.camera.bottom=-7;scene.add(key);
-const rim=new THREE.DirectionalLight(0xdde7f2,1.0);rim.position.set(5,2,-5);scene.add(rim);
-function wood(seed,dark){const c=document.createElement('canvas');c.width=256;c.height=128;const x=c.getContext('2d');const b=dark?[105,69,46]:[198,153,107];x.fillStyle=`rgb(${b[0]},${b[1]},${b[2]})`;x.fillRect(0,0,256,128);let r=seed*92821+17;const rnd=()=>((r=(r*1664525+1013904223)>>>0)/4294967296);for(let i=0;i<70;i++){const yy=rnd()*128;x.strokeStyle=`rgba(${dark?220:95},${dark?175:72},${dark?120:45},${.025+rnd()*.05})`;x.lineWidth=.5+rnd()*1.3;x.beginPath();x.moveTo(0,yy);for(let xx=0;xx<=256;xx+=18)x.lineTo(xx,yy+Math.sin(xx*.04+rnd()*5)*(1+rnd()*3));x.stroke()}const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(2.2,1);t.encoding=THREE.sRGBEncoding;return t}
-const lightTex=wood(3,false), darkTex=wood(7,true);
-function mat(dark){return new THREE.MeshStandardMaterial({map:dark?darkTex:lightTex,color:dark?0x9a6747:0xd6aa79,roughness:.66,metalness:0,emissive:0x5b351f,emissiveIntensity:0})}
-const root=new THREE.Group();scene.add(root);const ray=new THREE.Raycaster(),pointer=new THREE.Vector2(),pieces=[];
-function box(group,w,h,d,x,y,z,m){const g=new THREE.BoxGeometry(w,h,d,2,2,2);const mesh=new THREE.Mesh(g,m);mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;mesh.userData.piece=group;group.add(mesh)}
-function beam(id,axis,offset,dark,sign){const group=new THREE.Group();group.name=id;const m=mat(dark);group.userData={id,axis:new THREE.Vector3(...axis).normalize(),sign,start:new THREE.Vector3(...offset),travel:0,removed:false,mat:m};group.position.copy(group.userData.start);const L=4.8,T=1.02,gap=1.12,end=(L-gap)/2; if(axis[0]){box(group,end,T,T,-(gap+end)/2,0,0,m);box(group,end,T,T,(gap+end)/2,0,0,m);box(group,gap,.38,T,0,.32,0,m)}else if(axis[1]){box(group,T,end,T,0,-(gap+end)/2,0,m);box(group,T,end,T,0,(gap+end)/2,0,m);box(group,T,gap,.38,0,0,.32,m)}else{box(group,T,T,end,0,0,-(gap+end)/2,m);box(group,T,T,end,0,0,(gap+end)/2,m);box(group,.38,T,gap,.32,0,0,m)}root.add(group);pieces.push(group);return group}
-beam('A',[1,0,0],[0,.22,.18],false,1);beam('B',[1,0,0],[0,-.22,-.18],true,-1);beam('C',[0,1,0],[.20,0,-.20],true,1);beam('D',[0,1,0],[-.20,0,.20],false,-1);beam('E',[0,0,1],[-.18,.18,0],false,1);beam('F',[0,0,1],[.18,-.18,0],true,-1);
-const ORDER=['A','C','E','B','D','F'];let step=0,active=null,pid=null,startX=0,startY=0,startTravel=0,axisScreen=new THREE.Vector2();let orbiting=false,ox=0,oy=0,theta=.68,phi=1.05,radius=12.2,autoRotate=false;
-function current(){return ORDER[step]}
-function showToast(t){toast.textContent=t;toast.classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.classList.remove('show'),1150)}
+const stage=document.getElementById('stage'),progress=document.getElementById('progress'),msg=document.getElementById('message'),toast=document.getElementById('toast'),guide=document.getElementById('guide'),solved=document.getElementById('solved');
+const scene=new THREE.Scene();scene.background=new THREE.Color(0xeee9df);
+const camera=new THREE.PerspectiveCamera(34,innerWidth/innerHeight,.1,100);
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;stage.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xfff7ea,0x8b7967,1.75));
+const keyLight=new THREE.DirectionalLight(0xffeed3,3.6);keyLight.position.set(-5,8,6);keyLight.castShadow=true;keyLight.shadow.mapSize.set(1024,1024);keyLight.shadow.camera.left=-7;keyLight.shadow.camera.right=7;keyLight.shadow.camera.top=7;keyLight.shadow.camera.bottom=-7;scene.add(keyLight);
+const rim=new THREE.DirectionalLight(0xdde7f2,.95);rim.position.set(6,2,-6);scene.add(rim);
+
+const CELL=.72,COLL=.965,CENTER=new THREE.Vector3(.5,1.5,1.5);
+const RAW={"a":[[0,0,-1],[0,0,0],[0,0,1],[0,0,2],[0,0,3],[0,0,4],[0,1,-1],[0,1,0],[0,1,1],[0,1,2],[0,1,3],[0,1,4],[1,0,-1],[1,0,0],[1,0,1],[1,0,2],[1,0,3],[1,0,4],[1,1,-1],[1,1,0],[1,1,1],[1,1,2],[1,1,3],[1,1,4]],"b":[[0,2,-1],[0,2,0],[0,2,1],[0,2,2],[0,2,3],[0,2,4],[0,3,-1],[0,3,0],[0,3,1],[0,3,2],[0,3,3],[0,3,4],[1,2,-1],[1,2,0],[1,2,2],[1,2,3],[1,2,4],[1,3,-1],[1,3,0],[1,3,2],[1,3,3],[1,3,4]],"c":[[1,-1,1],[1,-1,2],[1,2,1],[1,3,1],[1,4,1],[1,4,2],[2,-1,1],[2,-1,2],[2,0,1],[2,0,2],[2,1,1],[2,1,2],[2,2,1],[2,2,2],[2,3,1],[2,3,2],[2,4,1],[2,4,2]],"d":[[-1,-1,1],[-1,-1,2],[-1,0,1],[-1,0,2],[-1,2,1],[-1,2,2],[-1,3,1],[-1,3,2],[-1,4,1],[-1,4,2],[0,-1,1],[0,-1,2],[0,4,1],[0,4,2]],"e":[[-2,1,2],[-2,1,3],[-2,2,2],[-2,2,3],[-1,1,2],[-1,1,3],[-1,2,3],[2,1,3],[2,2,3],[3,1,2],[3,1,3],[3,2,2],[3,2,3]],"f":[[-2,1,0],[-2,1,1],[-2,2,0],[-2,2,1],[-1,1,0],[-1,1,1],[-1,2,0],[2,1,0],[2,2,0],[3,1,0],[3,1,1],[3,2,0],[3,2,1]]};
+const AX={a:[0,0,1],b:[0,0,1],c:[0,1,0],d:[0,1,0],e:[1,0,0],f:[1,0,0]};
+const PIECE_COLORS={a:[0xd4aa78,false],b:[0x9a6847,true],c:[0xc08f61,false],d:[0x7e553d,true],e:[0xdab180,false],f:[0x8b6045,true]};
+
+function woodTexture(seed,dark){const c=document.createElement('canvas');c.width=256;c.height=128;const x=c.getContext('2d');const b=dark?[112,74,50]:[204,162,116];x.fillStyle=`rgb(${b[0]},${b[1]},${b[2]})`;x.fillRect(0,0,256,128);let r=seed*92821+17;const rnd=()=>((r=(r*1664525+1013904223)>>>0)/4294967296);for(let i=0;i<85;i++){const yy=rnd()*128;x.strokeStyle=`rgba(${dark?226:98},${dark?181:74},${dark?127:48},${.022+rnd()*.055})`;x.lineWidth=.5+rnd()*1.25;x.beginPath();x.moveTo(0,yy);for(let xx=0;xx<=256;xx+=18)x.lineTo(xx,yy+Math.sin(xx*.045+rnd()*5)*(1+rnd()*2.6));x.stroke()}const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1.6,1);t.encoding=THREE.sRGBEncoding;return t}
+const lightTex=woodTexture(4,false),darkTex=woodTexture(9,true);
+function makeMat(id){const [color,dark]=PIECE_COLORS[id];return new THREE.MeshStandardMaterial({map:dark?darkTex:lightTex,color,roughness:.64,metalness:0,emissive:0x6d4329,emissiveIntensity:0})}
+function worldCell(c){return new THREE.Vector3((c[0]-CENTER.x)*CELL,(c[1]-CENTER.y)*CELL,(c[2]-CENTER.z)*CELL)}
+
+const root=new THREE.Group();scene.add(root);const pieces=[];const pieceById={};const cubeGeo=new THREE.BoxGeometry(CELL*.975,CELL*.975,CELL*.975);
+function addBridge(group,id){const mat=group.userData.mat;let geo,pos;
+ if(id==='d'){geo=new THREE.BoxGeometry(CELL*.16,CELL*2.15,CELL*1.72);pos=worldCell([-1.48,1,1.5])}
+ if(id==='e'){geo=new THREE.BoxGeometry(CELL*3.15,CELL*1.72,CELL*.16);pos=worldCell([.5,1.5,3.48])}
+ if(id==='f'){geo=new THREE.BoxGeometry(CELL*3.15,CELL*1.72,CELL*.16);pos=worldCell([.5,1.5,-.48])}
+ if(!geo)return;const m=new THREE.Mesh(geo,mat);m.position.copy(pos);m.castShadow=true;m.receiveShadow=true;m.userData.piece=group;group.add(m);group.userData.visualBridges.push(m)
+}
+function createPiece(id){const group=new THREE.Group(),mat=makeMat(id),axis=new THREE.Vector3(...AX[id]).normalize();group.name=id;group.userData={id,axis,travel:0,targetTravel:0,removed:false,mat,cells:RAW[id],visualBridges:[],contactBuzz:false};
+ for(const c of RAW[id]){const m=new THREE.Mesh(cubeGeo,mat);m.position.copy(worldCell(c));m.castShadow=true;m.receiveShadow=true;m.userData.piece=group;group.add(m)}
+ addBridge(group,id);root.add(group);pieces.push(group);pieceById[id]=group;return group}
+Object.keys(RAW).forEach(createPiece);
+
+const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();
+function pieceOffset(piece,travel=piece.userData.travel){return piece.userData.axis.clone().multiplyScalar(travel)}
+function collisionAt(piece,candidate){const a=piece.userData.axis,offA=[a.x*candidate,a.y*candidate,a.z*candidate];for(const other of pieces){if(other===piece||other.userData.removed)continue;const b=other.userData.axis,t=other.userData.travel,offB=[b.x*t,b.y*t,b.z*t];for(const ca of piece.userData.cells){const ax=ca[0]+offA[0],ay=ca[1]+offA[1],az=ca[2]+offA[2];for(const cb of other.userData.cells){if(Math.abs(ax-(cb[0]+offB[0]))<COLL&&Math.abs(ay-(cb[1]+offB[1]))<COLL&&Math.abs(az-(cb[2]+offB[2]))<COLL)return true}}}return false}
+function sweep(piece,from,to){if(Math.abs(to-from)<1e-5)return from;const dir=Math.sign(to-from),step=.055*dir;let t=from,last=from;while((dir>0&&t<to)||(dir<0&&t>to)){const next=dir>0?Math.min(t+step,to):Math.max(t+step,to);if(collisionAt(piece,next)){let lo=last,hi=next;for(let i=0;i<9;i++){const mid=(lo+hi)/2;if(collisionAt(piece,mid))hi=mid;else lo=mid}return lo}last=next;t=next}return to}
+function canEscape(piece,sign){const start=piece.userData.travel,target=start+sign*7.5;return Math.abs(sweep(piece,start,target)-target)<.04}
+function updatePieceTransform(piece){piece.position.copy(piece.userData.axis).multiplyScalar(piece.userData.travel*CELL)}
+function snapPiece(piece){const t=piece.userData.travel,n=Math.round(t);if(Math.abs(t-n)<.34&&!collisionAt(piece,n)){piece.userData.targetTravel=n}else piece.userData.targetTravel=t}
+function removedCount(){return pieces.filter(p=>p.userData.removed).length}
+function markRemoved(piece,sign){if(piece.userData.removed)return;piece.userData.removed=true;piece.userData.targetTravel=piece.userData.travel+sign*6.8;piece.userData.mat.emissiveIntensity=0;const n=removedCount();progress.textContent=`${n} / 6`;haptic(18);showToast('Piece released');msg.textContent=n<6?'The lock has changed. Probe it again.':'';if(n===6)setTimeout(()=>solved.classList.add('show'),500)}
+
+let theta=.74,phi=1.02,radius=10.6,vTheta=0,vPhi=0,snapTheta=null;const pointers=new Map();let mode='none',activePiece=null,primaryId=null,startX=0,startY=0,startTravel=0,axisScreen=new THREE.Vector2(),orbitX=0,orbitY=0,pinchDist=0,pinchRadius=radius,lastDragSign=1,lastBlocked=false;
+function cameraPos(){const sp=Math.sin(phi);camera.position.set(radius*sp*Math.sin(theta),radius*Math.cos(phi),radius*sp*Math.cos(theta));camera.lookAt(0,0,0)}cameraPos();
+function pick(clientX,clientY){const rect=renderer.domElement.getBoundingClientRect();ndc.x=((clientX-rect.left)/rect.width)*2-1;ndc.y=-((clientY-rect.top)/rect.height)*2+1;ray.setFromCamera(ndc,camera);const hits=ray.intersectObjects(root.children,true);for(const h of hits){const p=h.object.userData.piece;if(p&&!p.userData.removed)return p}return null}
+function projectedAxis(piece){const center=new THREE.Vector3();for(const c of piece.userData.cells)center.add(worldCell(c));center.multiplyScalar(1/piece.userData.cells.length).add(piece.position);const p0=center.clone().project(camera),p1=center.clone().add(piece.userData.axis).project(camera);axisScreen.set(p1.x-p0.x,-(p1.y-p0.y));const len=axisScreen.length();if(len>.0001)axisScreen.multiplyScalar(1/len);return len}
+function showToast(t){toast.textContent=t;toast.classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.classList.remove('show'),1050)}
 function haptic(ms=8){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}}
-function screenAxis(piece){const a=piece.userData.axis.clone().multiplyScalar(piece.userData.sign);const p0=piece.position.clone(),p1=p0.clone().add(a);p0.project(camera);p1.project(camera);axisScreen.set(p1.x-p0.x,-(p1.y-p0.y)).normalize()}
-function pick(e){const rect=renderer.domElement.getBoundingClientRect();pointer.x=((e.clientX-rect.left)/rect.width)*2-1;pointer.y=-((e.clientY-rect.top)/rect.height)*2+1;ray.setFromCamera(pointer,camera);const hits=ray.intersectObjects(root.children,true);return hits[0]?.object?.userData?.piece||null}
-function down(e){const p=pick(e);if(p&&!p.userData.removed){if(p.name!==current()){showToast('Locked — another piece moves first.');haptic(5);return}active=p;pid=e.pointerId;startX=e.clientX;startY=e.clientY;startTravel=p.userData.travel;screenAxis(p);p.userData.mat.emissiveIntensity=.12;renderer.domElement.setPointerCapture?.(e.pointerId)}else{orbiting=true;pid=e.pointerId;ox=e.clientX;oy=e.clientY}}
-function move(e){if(e.pointerId!==pid)return;if(active){const dx=e.clientX-startX,dy=e.clientY-startY;const d=dx*axisScreen.x+dy*axisScreen.y;const tr=THREE.MathUtils.clamp(startTravel+d*.018,0,4.1);active.userData.travel=tr;active.position.copy(active.userData.start).addScaledVector(active.userData.axis,active.userData.sign*tr)}else if(orbiting){const dx=e.clientX-ox,dy=e.clientY-oy;ox=e.clientX;oy=e.clientY;theta-=dx*.007;phi=THREE.MathUtils.clamp(phi+dy*.006,.45,2.15)}}
-function up(e){if(e.pointerId!==pid)return;if(active){active.userData.mat.emissiveIntensity=0;if(active.userData.travel>1.85){active.userData.removed=true;active.userData.travel=4.1;active.position.copy(active.userData.start).addScaledVector(active.userData.axis,active.userData.sign*4.1);step++;progress.textContent=`${step} / 6`;haptic(18);if(step===6){msg.textContent='';setTimeout(()=>solved.classList.add('show'),250)}else{msg.textContent='Piece released. Find what moves next.';showToast('Piece released')}}else{active.userData.travel=0;active.position.copy(active.userData.start)}active=null}orbiting=false;pid=null}
-renderer.domElement.addEventListener('pointerdown',down);renderer.domElement.addEventListener('pointermove',move);renderer.domElement.addEventListener('pointerup',up);renderer.domElement.addEventListener('pointercancel',up);
-function reset(){step=0;progress.textContent='0 / 6';msg.textContent='Find the hidden sequence and take the puzzle apart.';solved.classList.remove('show');pieces.forEach(p=>{p.userData.removed=false;p.userData.travel=0;p.position.copy(p.userData.start);p.userData.mat.emissiveIntensity=0});autoRotate=false}
-function hint(){if(step>=6)return;const p=pieces.find(q=>q.name===current());p.userData.mat.emissiveIntensity=.2;hintArrow.classList.add('show');showToast('This piece can move.');setTimeout(()=>{if(p!==active)p.userData.mat.emissiveIntensity=0;hintArrow.classList.remove('show')},1600)}
-document.getElementById('reset').onclick=reset;document.getElementById('replay').onclick=reset;document.getElementById('hint').onclick=hint;document.getElementById('view').onclick=()=>{autoRotate=!autoRotate;showToast(autoRotate?'Auto rotate on':'Auto rotate off')};document.getElementById('back').onclick=()=>showToast('Prototype · no level select yet');document.getElementById('more').onclick=()=>showToast('Reset · Hint · View');
+function cancelPiece(){if(activePiece){activePiece.userData.mat.emissiveIntensity=0;snapPiece(activePiece);activePiece=null}}
+function pinchSetup(){const vals=[...pointers.values()];if(vals.length<2)return;const dx=vals[0].x-vals[1].x,dy=vals[0].y-vals[1].y;pinchDist=Math.hypot(dx,dy);pinchRadius=radius;mode='pinch';cancelPiece()}
+function onDown(e){pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});renderer.domElement.setPointerCapture?.(e.pointerId);if(pointers.size>=2){pinchSetup();return}primaryId=e.pointerId;const p=pick(e.clientX,e.clientY);if(p){activePiece=p;mode='piece';startX=e.clientX;startY=e.clientY;startTravel=p.userData.travel;lastBlocked=false;p.userData.targetTravel=p.userData.travel;p.userData.mat.emissiveIntensity=.11;const len=projectedAxis(p);if(len<.035){showToast('Rotate the view to move this piece');mode='pieceWeak'}}else{mode='orbit';orbitX=e.clientX;orbitY=e.clientY;vTheta=vPhi=0;snapTheta=null}}
+function onMove(e){if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size>=2||mode==='pinch'){const vals=[...pointers.values()];if(vals.length>=2){if(mode!=='pinch')pinchSetup();const d=Math.hypot(vals[0].x-vals[1].x,vals[0].y-vals[1].y);radius=THREE.MathUtils.clamp(pinchRadius*(pinchDist/Math.max(20,d)),7.2,14.2)}return}if(e.pointerId!==primaryId)return;
+ if(mode==='orbit'){const dx=e.clientX-orbitX,dy=e.clientY-orbitY;orbitX=e.clientX;orbitY=e.clientY;theta-=dx*.007;phi=THREE.MathUtils.clamp(phi+dy*.006,.44,2.20);vTheta=-dx*.0009;vPhi=dy*.0007;return}
+ if((mode==='piece'||mode==='pieceWeak')&&activePiece){if(mode==='pieceWeak')return;const dx=e.clientX-startX,dy=e.clientY-startY,d=dx*axisScreen.x+dy*axisScreen.y;const desired=THREE.MathUtils.clamp(startTravel+d*.0105,-7.5,7.5);lastDragSign=Math.sign(desired-activePiece.userData.travel)||lastDragSign;const safe=sweep(activePiece,activePiece.userData.travel,desired);const blocked=Math.abs(safe-desired)>.025;activePiece.userData.travel=safe;activePiece.userData.targetTravel=safe;updatePieceTransform(activePiece);if(blocked&&!lastBlocked){haptic(5);showToast('Wood on wood');lastBlocked=true}else if(!blocked)lastBlocked=false}}
+function onUp(e){pointers.delete(e.pointerId);if(mode==='pinch'){if(pointers.size===1){const [id,p]=pointers.entries().next().value;primaryId=id;mode='orbit';orbitX=p.x;orbitY=p.y}else mode='none';return}if(e.pointerId!==primaryId)return;
+ if((mode==='piece'||mode==='pieceWeak')&&activePiece){const p=activePiece;p.userData.mat.emissiveIntensity=0;if(mode==='piece'&&Math.abs(p.userData.travel-startTravel)>.28){const sign=Math.sign(p.userData.travel-startTravel)||lastDragSign;if(canEscape(p,sign))markRemoved(p,sign);else snapPiece(p)}else snapPiece(p);activePiece=null}
+ if(mode==='orbit'){if(Math.abs(vTheta)<.006){const q=Math.round(theta/(Math.PI/4))*(Math.PI/4);if(Math.abs(q-theta)<.12)snapTheta=q}}
+ mode='none';primaryId=null}
+renderer.domElement.addEventListener('pointerdown',onDown);renderer.domElement.addEventListener('pointermove',onMove);renderer.domElement.addEventListener('pointerup',onUp);renderer.domElement.addEventListener('pointercancel',onUp);
+
+function movableCandidates(){const out=[];for(const p of pieces){if(p.userData.removed)continue;for(const sign of [-1,1]){const start=p.userData.travel,target=start+sign*1;const got=sweep(p,start,target),delta=Math.abs(got-start);if(delta>.72)out.push({p,sign,escape:canEscape(p,sign),delta})}}out.sort((u,v)=>(v.escape-u.escape)||(v.delta-u.delta));return out}
+let hintArrow=null;function clearHint(){if(hintArrow){scene.remove(hintArrow);hintArrow=null}for(const p of pieces)if(p!==activePiece)p.userData.mat.emissiveIntensity=0}
+function hint(){clearHint();const c=movableCandidates()[0];if(!c){showToast('No full move here — try a partial shift');return}c.p.userData.mat.emissiveIntensity=.22;const center=new THREE.Vector3();for(const cell of c.p.userData.cells)center.add(worldCell(cell));center.multiplyScalar(1/c.p.userData.cells.length).add(c.p.position);const dir=c.p.userData.axis.clone().multiplyScalar(c.sign);hintArrow=new THREE.ArrowHelper(dir,center,1.25*CELL,0x69533f,.36*CELL,.22*CELL);scene.add(hintArrow);showToast(c.escape?'This piece can come out':'This piece can move');setTimeout(()=>{if(c.p!==activePiece)c.p.userData.mat.emissiveIntensity=0;clearHint()},1900)}
+function reset(){clearHint();solved.classList.remove('show');for(const p of pieces){p.userData.travel=0;p.userData.targetTravel=0;p.userData.removed=false;p.userData.mat.emissiveIntensity=0;updatePieceTransform(p)}progress.textContent='0 / 6';msg.textContent='Take it apart. The wood itself decides what can move.';theta=.74;phi=1.02;radius=10.6;vTheta=vPhi=0;snapTheta=null}
+document.getElementById('reset').onclick=reset;document.getElementById('replay').onclick=reset;document.getElementById('hint').onclick=hint;document.getElementById('view').onclick=()=>{theta=.74;phi=1.02;radius=10.6;vTheta=vPhi=0;snapTheta=null;showToast('View reset')};document.getElementById('back').onclick=()=>showToast('Prototype · one puzzle');document.getElementById('more').onclick=()=>showToast('Background drag · piece drag · pinch');
+
 function resize(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,2))}addEventListener('resize',resize);
-function animate(){requestAnimationFrame(animate);if(autoRotate&&!active&&!orbiting)theta+=.003;const sp=Math.sin(phi);camera.position.set(radius*sp*Math.sin(theta),radius*Math.cos(phi),radius*sp*Math.cos(theta));camera.lookAt(0,0,0);root.rotation.y+=0;renderer.render(scene,camera)}animate();
-setTimeout(()=>hintArrow.classList.add('show'),850);setTimeout(()=>hintArrow.classList.remove('show'),2600);
+function animate(){requestAnimationFrame(animate);if(mode!=='orbit'&&mode!=='pinch'){if(snapTheta!==null){theta+=(snapTheta-theta)*.12;if(Math.abs(theta-snapTheta)<.002){theta=snapTheta;snapTheta=null}}else{theta+=vTheta;phi=THREE.MathUtils.clamp(phi+vPhi,.44,2.20);vTheta*=.90;vPhi*=.88}}
+ for(const p of pieces){const diff=p.userData.targetTravel-p.userData.travel;if(Math.abs(diff)>.001){p.userData.travel+=diff*.16;updatePieceTransform(p)}}cameraPos();renderer.render(scene,camera)}animate();
+setTimeout(()=>guide.classList.add('show'),550);setTimeout(()=>guide.classList.remove('show'),3100);
 })();
 </script>
 </body>
